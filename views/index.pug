@@ -1,0 +1,7 @@
+extends layout.pug
+
+block content
+  h1 Welcome to #{title}
+  
+  each item in books 
+    p= item.dataValues.title
