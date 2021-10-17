@@ -1,0 +1,19 @@
+extends layout.pug
+
+block content
+    h1 New Book
+
+    form(action='/books/new', method='POST')
+        div
+            label(for="title") Title:
+            input(type="text", name="title" )
+        div
+            label(for="author") Author:
+            input(type="text", name="author" )
+        div
+            label(for="genre") Genre:
+            input(type="text", name="genre" )
+        div
+            label(for="year") Year:
+            input(type="text", name="year" )
+        input(type="submit")
