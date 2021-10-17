@@ -9,6 +9,7 @@ function asyncHandler(cb){
       await cb(req, res, next)
     } catch(error){
       // Forward error to the global error handler
+      console.log('Error from index.js')
       next(error);
     }
   }
@@ -20,10 +21,5 @@ router.get('/', asyncHandler(async (req, res) => {
   res.render('index', { books, title: 'Books' });
 }));
 
-/* GET articles listing. */
-//router.get('/', asyncHandler(async (req, res) => {
-  //const books = await Book.findAll({ order: [["createdAt", "DESC"]] });
-  //res.render("articles/index", { articles, title: "Sequelize-It!" });
-//}));
 
 module.exports = router;
