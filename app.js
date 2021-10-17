@@ -50,15 +50,13 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-  if (err.status === 404) {
-    console.log('404')
+  if (err.status == 404) {
     res.render('page-not-found', {message: 'Page not found'});
   } else {
-    console.log('500');
-    res.status(err.status || 500);
-    res.render('error');
+    err.status = err.status | 500;
+    console.log('Error:', err.status, err.message);
+    res.render('error', err);
   }
-  
 });
 
 module.exports = app;
