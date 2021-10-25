@@ -9,7 +9,6 @@ function asyncHandler(cb){
       await cb(req, res, next)
     } catch(err){
       // Forward error to the global error handler
-      console.log('Error from index.js')
       next(err);
     }
   }
@@ -33,7 +32,6 @@ router.post('/books/new', asyncHandler(async (req, res) => {
     book = await Book.create(req.body);
     res.redirect('/books/' + book.id);
   } catch (error) {
-    console.log(error);
     if (error.name === "SequelizeValidationError") { 
       book = await Book.build(req.body);
       res.render("new-book", { book, errors: error.errors })
@@ -55,7 +53,6 @@ router.post('/books/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   await book.update(req.body);
   res.locals.statusMessage= `Updated ${book.title}`;
-  console.log(res.locals.statusMessage);
   res.redirect('/books/' + book.id);
 }));
 
@@ -64,7 +61,6 @@ router.post('/books/:id/delete', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   await book.destroy(req.body);
   res.locals.statusMessage= `Deleted ${book.title}`;
-  console.log(res.locals.statusMessage);
   res.redirect('/');
 }));
 module.exports = router;
