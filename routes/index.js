@@ -14,8 +14,13 @@ function asyncHandler(cb){
   }
 }
 
-// get /books - Shows the full list of books
+// get / - Redirects to /books
 router.get('/', asyncHandler(async (req, res) => {
+  res.redirect('/books');
+}));
+
+// get /books - Shows the full list of books
+router.get('/books', asyncHandler(async (req, res) => {
   const books = await Book.findAll({ order: [["createdAt", "DESC"]] });
   res.render('index', { books, title: 'Books' });
 }));
@@ -45,15 +50,25 @@ router.post('/books/new', asyncHandler(async (req, res) => {
 router.get('/books/:id', asyncHandler(async (req, res) => {
   res.locals.statusMessage= '';
   const book = await Book.findByPk(req.params.id);
-  res.render('edit-book', { book});
+  res.render('update-book', { book});
 }));
 
 // post /books/:id - Updates book info in the database
 router.post('/books/:id', asyncHandler(async (req, res) => {
-  const book = await Book.findByPk(req.params.id);
-  await book.update(req.body);
-  res.locals.statusMessage= `Updated ${book.title}`;
-  res.redirect('/books/' + book.id);
+  let book;
+  try {
+    book = await Book.findByPk(req.params.id);
+    await book.update(req.body);
+    console.log('updated', book)
+    res.redirect(`/books/${book.id}`);
+  } catch (error) {
+    if (error.name === "SequelizeValidationError") { 
+      console.log('error updating', book);
+      res.render("update-book", { book, errors: error.errors })
+    } else {
+      throw error;
+    }
+  }
 }));
 
 // post /books/:id/delete - Deletes a book. Careful, this can’t be undone. It can be helpful to create a new “test” book to test deleting
